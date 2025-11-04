@@ -1,0 +1,2 @@
+INSERT INTO `payments` (`id`, `type`, `name`, `min`, `max`, `new_users`, `status`, `params`) VALUES
+(110, 'perfectmoney', 'Perfect Money USD', 20, 1000, 1, 1, '{\"type\":\"perfectmoney\",\"name\":\"Perfect Money USD\",\"min\":\"5\",\"max\":\"100\",\"new_users\":\"1\",\"status\":\"0\",\"option\":{\"tnx_fee\":\"0\",\"usd_wallet\":\"\",\"alternate_pass\":\"\"}');

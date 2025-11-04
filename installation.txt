@@ -1,0 +1,13 @@
+MODULE INSTALLATION V3.4 & V3.5
+
+Step 1 - Unzip the zip file in public_html.
+
+Step 2 - Now unzip the other zip file you got in public_html
+
+Step 3 - Now go to database folder you see in public_html.
+
+Step 4 - Now download the database.sql
+
+Step 5 - Now go to phpmyadmin > select the database > now click import > now upload the database.sql in there and click go.
+
+Now the module is successfully installed thank you for contacting us.

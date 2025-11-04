@@ -1,0 +1,1 @@
+INSERT INTO `payments` (`id`, `type`, `name`, `min`, `max`, `new_users`, `status`, `params`) VALUES(101, 'easypaisa', 'Easypaisa', 1, 10000, 0, 1, '{\"type\":\"easypaisa\",\"name\":\"Easypaisa\",\"min\":\"1\",\"max\":\"10000\",\"number\":\"03181031454\",\"holder\":\"Farhan\",\"new_users\":\"0\",\"status\":\"1\",\"option\":{\"tnx_fee\":\"0\",\"rate_to_usd\":\"190\"}}');

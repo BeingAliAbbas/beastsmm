@@ -1,0 +1,2 @@
+wget --spider -o - https://domain.com/cron/order >/dev/null 2>&1
+wget --spider -o - https://domain.com/cron/status >/dev/null 2>&1

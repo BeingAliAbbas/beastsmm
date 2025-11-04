@@ -1,0 +1,37 @@
+<?php
+// Predefined database credentials
+$host = 'localhost';
+$dbname = 'beastsmm';
+$username = 'root';
+$password = '';
+
+// Create a connection
+$conn = new mysqli($host, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if (isset($_GET['uid']) && is_numeric($_GET['uid'])) {
+    $uid = intval($_GET['uid']);
+
+    // Query to fetch the WhatsApp number from the database
+    $query = "SELECT whatsapp_number FROM general_users WHERE id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $uid);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+
+    // Return the result as JSON
+    if ($result) {
+        echo json_encode(['whatsapp_number' => $result['whatsapp_number']]);
+    } else {
+        echo json_encode(['whatsapp_number' => null]);
+    }
+} else {
+    echo json_encode(['whatsapp_number' => null]);
+}
+
+$conn->close();
+?>

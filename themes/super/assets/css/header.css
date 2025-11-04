@@ -1,0 +1,376 @@
+.header.top {
+    background: #00afcc;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+.header {
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    background: #fff;
+    border-bottom: 0.01px solid #ced4da;
+}
+
+.logo2 {
+    margin-left: 45px;
+}
+
+.hqdarkclr {
+    color: #000;
+}
+
+.sidenavHeader {
+    color: #06d6a1;
+    background: #061e2c;
+    height: 73px;
+    border-bottom: 0.5px solid #06d6a1;
+    padding: 20px;
+}
+
+.slide_main {
+    color: #fff;
+    background: #061e2c;
+    border-right: 0.5px solid #06d6a1;
+}
+
+#whole-flex {
+    position: absolute;
+    flex-direction: column;
+    text-align: center;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: -10;
+}
+
+/* NavBar */
+
+.sidenav {
+    max-width: 200px;
+    width: 85%;
+    overflow-x: hidden blue;
+    overflow-y: hidden red;
+    height: 100%;
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    background-color: white;
+    transform-origin: right center;
+    transform: translateX(-380px);
+    -moz-transition: all 1300ms;
+    -webkit-transition: all 1300ms;
+    transition: all 1300ms;
+}
+
+.header-logo {
+    margin-top: 35px;
+    margin-left: 70px;
+}
+
+.show-btn {
+    position: absolute;
+    top: 5px;
+    color: #06d6a1;
+    cursor: pointer;
+    font-size: 40px;
+    z-index: 100;
+    margin-left: 4px;
+}
+
+#closeBtn {
+    color: #06d6a1;
+    display: none;
+    position: fixed;
+    top: 8px;
+    left: 0;
+    margin-left: 160px;
+    font-size: 40px;
+    cursor: pointer;
+    z-index: 175;
+    transform: translateY(-5px);
+    transition: visibility 5s;
+}
+
+.sidenavContentHeader {
+    margin-top: 5px;
+    padding: 10px 0px 15px 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #06d6a1;
+}
+
+.sidenavContent {
+    background-color: blue;
+    padding: 10px 0px 15px 25px;
+    border-bottom: 0.3px solid black;
+}
+
+hr {
+    height: 1px;
+    border: 0;
+    color: gray;
+    background-color: gray;
+    margin: 15px auto 10px auto;
+}
+
+.sidenavRow {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 15px 25px 15px 25px;
+}
+
+.sidenavRow:hover {
+    background-color: #eaeded;
+}
+
+.sidenavRow:hover i {
+    color: #111111 !important;
+}
+
+#closeBtn {
+    display: none;
+    position: fixed;
+    top: 8px;
+    left: 0;
+    margin-left: 160px;
+    color: white;
+    font-size: 40px;
+    cursor: pointer;
+    z-index: 175;
+    transform: translateY(-5px);
+    transition: visibility 5s;
+}
+
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+    text-decoration: none;
+    color: black;
+}
+
+/* animation */
+
+@keyframes collapse {
+    0% {
+        z-index: 100;
+        transform: translateX(0px);
+    }
+    100% {
+        transform: translateX(-380px);
+    }
+}
+
+@keyframes expand {
+    0% {
+        z-index: 100;
+        transform: translateX(-380px);
+    }
+    100% {
+        transform: translateX(0px);
+    }
+}
+
+@keyframes show {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes hide {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Overlay */
+
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    z-index: 50;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.sidenavContainer {
+    display: none;
+    height: 0px;
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: center top;
+}
+
+@keyframes expandDropDown {
+    0% {
+        transform: scaleY(0);
+        opacity: 0;
+    }
+    100% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+@keyframes collapseDropDown {
+    0% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scaleY(0);
+        opacity: 0;
+    }
+}
+
+/* Container part */
+
+#main-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    color: blue;
+}
+
+@keyframes mainAway {
+    0% {
+        transform: translateX(0px);
+    }
+    100% {
+        transform: translateX(-380px);
+    }
+}
+
+@keyframes mainBack {
+    0% {
+        transform: translateX(-380px);
+    }
+    100% {
+        transform: translateX(0px);
+    }
+}
+
+#sub-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    background-color: white;
+    transform: translateX(380px);
+}
+
+@keyframes subBack {
+    0% {
+        transform: translateX(380px);
+    }
+    100% {
+        transform: translateX(0px);
+    }
+}
+
+@keyframes subPush {
+    0% {
+        transform: translateX(0px);
+    }
+    100% {
+        transform: translateX(380px);
+    }
+}
+
+#mainMenu {
+    margin-top: 5px;
+    padding: 15px 0px 15px 25px;
+    font-weight: bold;
+}
+
+#mainMenu:hover {
+    background-color: #eaeded;
+    cursor: pointer;
+}
+
+.slct {
+    border-bottom: 2px;
+    border-color: red;
+}
+
+.whatsappfloat {
+    position: fixed;
+    bottom: 10px;
+    color: #FFF;
+    text-align: center;
+    box-shadow: 2px 2px 3px #999;
+    z-index: 100;
+}
+
+.my-whatsappfloat {
+    margin-top: 8px;
+    color: #fff;
+}
+
+.whatsappfblinking {
+    animation: blinkingText 1.2s infinite;
+}
+
+@keyframes blinkingText {
+    0% {
+        color: #000;
+    }
+    49% {
+        color: #000;
+    }
+    60% {
+        color: transparent;
+    }
+    99% {
+        color: transparent;
+    }
+    100% {
+        color: #000;
+    }
+}
+
+.whatsappblinkingbtn {
+    animation: blinkingText 1.2s infinite;
+    color: white;
+}
+
+@keyframes blinkingText {
+    0% {
+        color: white;
+    }
+    49% {
+        color: white;
+    }
+    60% {
+        color: transparent;
+    }
+    99% {
+        color: transparent;
+    }
+    100% {
+        color: white;
+    }
+}
+
+.jumbotron-image {
+    background-position: Left bottom;
+    background-repeat: no-repeat;
+    background-size: 70% 50%;
+}

@@ -1,0 +1,2 @@
+INSERT INTO `payments` (`id`, `type`, `name`, `min`, `max`, `new_users`, `status`, `params`) VALUES
+(26, 'nayapay', 'NayaPay by KINGSMMPROVIDER.COM', 100, 1000000, 1, 1, '{\"type\":\"nayapay\",\"name\":\"NayaPay [5% Bonus From $100]\",\"min\":\"100\",\"max\":\"1000000\",\"new_users\":\"1\",\"status\":\"1\",\"option\":{\"tnx_fee\":\"0\",\"title\":\"Nimra Shahzad Bhatti\",\"nayapayid\":\"admin@kingsmmprovider.com\",\"number\":\"03020786512\",\"gmail\":\"admin@kingsmmprovider.com\",\"gmail_password\":\"123456789\",\"rate_to_usd\":\"230\"}}');
