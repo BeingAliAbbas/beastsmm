@@ -42,7 +42,10 @@ if ($user_role !== 'admin') {
       $separator = '';
       break;
   }
-  $currency_symbol = get_option('currency_symbol',"$");
+  // Get current currency for multi-currency support
+  $current_currency = get_current_currency();
+  $currency_symbol = $current_currency['symbol'];
+  $currency_code = $current_currency['code'];
 ?>
 
 <?php if (get_option('dashboard_text','') != '') { ?>
@@ -58,11 +61,10 @@ if ($user_role !== 'admin') {
 <?php }?>
 
 <?php
-// Assuming the user's avatar URL and balance data are set
-$user_avatar_url = "path/to/avatar.jpg"; // Example avatar URL
-$user_balance = isset($data_log->user_balance) ? $data_log->user_balance : 0; // User's balance
-$low_balance_threshold = 100; // Low balance threshold
-$currency_symbol = get_option('currency_symbol', "PKR");
+// Get user balance and convert to current currency
+$user_balance = isset($data_log->user_balance) ? $data_log->user_balance : 0;
+$user_balance_converted = convert_currency($user_balance, 'PKR', $current_currency['code']);
+$low_balance_threshold = 100; // Low balance threshold in PKR
 ?>
 
 <!-- User Details Box -->
@@ -104,7 +106,7 @@ $currency_symbol = get_option('currency_symbol', "PKR");
             <!-- User Balance -->
             <h6 class="user-balance">
                             <i class="fa fa-credit-card" aria-hidden="true"></i>
-                Your Balance: <?= htmlspecialchars($currency_symbol) ?><?= number_format($user_balance, 2) ?>
+                Your Balance: <?= htmlspecialchars($currency_symbol) ?><?= number_format($user_balance_converted, 2) ?>
             </h6>
 
             <!-- Low balance warning and add funds button -->
@@ -285,6 +287,7 @@ if (get_role("admin")) {
             continue;
         }
 
+        $charge_converted = convert_currency($row['charge'], 'PKR', $currency_code);
         echo "<tr>
                 <td>" . htmlspecialchars($row['id']) . "</td>
                 <td><span class='status-label'>" . htmlspecialchars($row['status']) . "</span></td>
@@ -292,7 +295,7 @@ if (get_role("admin")) {
                 <td>" . htmlspecialchars($row['quantity']) . "</td>
                 <td>" . htmlspecialchars($row['start_counter']) . "</td>
                 <td>" . htmlspecialchars($row['remains']) . "</td>
-                <td>" . htmlspecialchars($row['charge']) . " PKR</td>
+                <td>" . htmlspecialchars($currency_symbol . number_format($charge_converted, 2)) . "</td>
                 <td>" . htmlspecialchars($row['created']) . "</td>
               </tr>";
     }
@@ -505,11 +508,14 @@ if ($result->num_rows > 0) {
 
         // WhatsApp number from settings
         $whatsapp_number = get_option('whatsapp_number'); // Fetch WhatsApp number from settings
+        
+        // Convert transaction amount to current currency
+        $transaction_amount_converted = convert_currency($transaction_amount, 'PKR', $currency_code);
 
         // WhatsApp message with emojis
         $whatsapp_message = "Please approve the following transaction:\n\n"
             . "🔢 *Transaction ID:* $transaction_id\n"  // Added number emoji
-            . "💸 *Amount:* $transaction_amount PKR\n"   // Added money emoji
+            . "💸 *Amount:* " . $currency_symbol . number_format($transaction_amount_converted, 2) . " " . $currency_code . "\n"   // Added money emoji
             . "💳 *Payment Method:* $transaction_type\n"  // Added credit card emoji
             . "⏰ *Created:* $transaction_created";        // Added clock emoji
 
@@ -526,7 +532,7 @@ if ($result->num_rows > 0) {
                 <img src='assets/images/clock.png' alt='Clock Icon' class='clock-icon'>
                 <h3>Transaction ID: " . $transaction_id . "</h3>
                 <p><strong>Transaction Type:</strong> " . $transaction_type . "</p>
-                <p><strong>Amount:</strong> " . $transaction_amount . " PKR</p>
+                <p><strong>Amount:</strong> " . $currency_symbol . number_format($transaction_amount_converted, 2) . " " . $currency_code . "</p>
                 <p><strong>Status:</strong> <span class='status-pending'>Pending</span></p>
                 <p><strong>Date:</strong> " . $transaction_created . "</p>";
         
@@ -777,7 +783,9 @@ $mysqli->close();
           </div>
         </div>
       </div>
-      <?php }else{ ?>
+      <?php }else{ 
+        $user_balance_fmt = (!empty($data_log->user_balance)) ? convert_currency($data_log->user_balance, 'PKR', $currency_code) : 0;
+      ?>
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-3">
           <div class="d-flex align-items-center">
@@ -786,14 +794,16 @@ $mysqli->close();
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=get_option('currency_symbol',"$")?><?=(!empty($data_log->user_balance)) ? currency_format($data_log->user_balance, get_option('currency_decimal', 2), $decimalpoint, $separator) : 0?></h4>
+                <h4 class="m-0 text-right number"><?=$currency_symbol?><?=currency_format($user_balance_fmt, get_option('currency_decimal', 2), $decimalpoint, $separator)?></h4>
                 <small class="text-muted "><?=lang("your_balance")?></small>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <?php } ?>
+      <?php } 
+        $total_spent_receive_fmt = (!empty($data_log->total_spent_receive)) ? convert_currency($data_log->total_spent_receive, 'PKR', $currency_code) : 0;
+      ?>
 
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-3">
@@ -803,7 +813,7 @@ $mysqli->close();
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=get_option('currency_symbol',"$")?><?=(!empty($data_log->total_spent_receive)) ? currency_format($data_log->total_spent_receive, get_option('currency_decimal', 2), $decimalpoint, $separator) : 0?></h4>
+                <h4 class="m-0 text-right number"><?=$currency_symbol?><?=currency_format($total_spent_receive_fmt, get_option('currency_decimal', 2), $decimalpoint, $separator)?></h4>
                 <small class="text-muted ">
                   <?=(get_role("admin") ? lang("total_amount_recieved") : lang("total_amount_spent"))?>
                 </small>
@@ -848,6 +858,11 @@ $mysqli->close();
 
     <?php
       if (get_role("admin")) {
+        // Convert admin statistics to current currency
+        $users_balance_conv = convert_currency($data_log->users_balance, 'PKR', $currency_code);
+        $providers_balance_conv = convert_currency($data_log->providers_balance, 'PKR', $currency_code);
+        $last_profit_30_days_conv = convert_currency($data_log->last_profit_30_days, 'PKR', $currency_code);
+        $profit_today_conv = convert_currency($data_log->profit_today, 'PKR', $currency_code);
     ?>
     <div class="row">
       <div class="col-sm-6 col-lg-3 item">
@@ -858,7 +873,7 @@ $mysqli->close();
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format($data_log->users_balance, 2, '.', ','); ?></h4>
+                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format($users_balance_conv, 2, '.', ','); ?></h4>
                 <small class="text-muted "><?php echo lang("total_users_balance"); ?> </small>
               </div>
             </div>
@@ -874,7 +889,7 @@ $mysqli->close();
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format($data_log->providers_balance, 2, '.', ','); ?></h4>
+                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format($providers_balance_conv, 2, '.', ','); ?></h4>
                 <small class="text-muted "><?php echo lang("total_providers_balance"); ?> </small>
               </div>
             </div>
@@ -890,7 +905,7 @@ $mysqli->close();
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format($data_log->last_profit_30_days, 2, '.', ','); ?></h4>
+                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format($last_profit_30_days_conv, 2, '.', ','); ?></h4>
                 <small class="text-muted "><?php echo lang("total_profit_30_days"); ?></small>
               </div>
             </div>
@@ -906,7 +921,7 @@ $mysqli->close();
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format($data_log->profit_today, 2, '.', ','); ?></h4>
+                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format($profit_today_conv, 2, '.', ','); ?></h4>
                 <small class="text-muted "><?php echo lang("total_profit_today"); ?></small>
               </div>
             </div>
@@ -1152,7 +1167,7 @@ $mysqli->close();
           "add_type"         => lang("Type"),
           "provider"         => lang("api_provider"),
           "api_service_id"   => lang("api_service_id"),
-          "price"            => lang("rate_per_1000")."(".get_option("currency_symbol","").")",
+          "price"            => lang("rate_per_1000")."(".$currency_symbol.")",
           "min_max"          => lang("min__max_order"),
           "desc"             => lang("Description"),
           "status"           => lang("Status"),
@@ -1160,7 +1175,7 @@ $mysqli->close();
       }else{
         $columns_best_seller = array(
           "name"             => lang("Name"),
-          "price"            => lang("rate_per_1000")."(".get_option("currency_symbol","").")",
+          "price"            => lang("rate_per_1000")."(".$currency_symbol.")",
           "min_max"          => lang("min__max_order"),
           "desc"             => lang("Description"),
         );

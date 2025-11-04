@@ -80,12 +80,31 @@
                     }else{
                       $balance = currency_format($balance,  get_option('currency_decimal', 2), $decimalpoint, $separator);
                     }
+                    
+                    // Get current currency for display
+                    $current_currency = get_current_currency();
                 ?>
-                <?=lang("Balance")?>: <?=get_option('currency_symbol',"$")?><?=$balance?>
+                <?=lang("Balance")?>: <?=$current_currency['symbol']?><?=$balance?>
                 <?php }else{?> 
                   <?=lang("Admin_account")?>
                 <?php }?> 
               </h6>
+              
+              <?php if (!get_role("admin")) { 
+                // Currency selector for non-admin users
+                $active_currencies = get_active_currencies();
+                $current_currency = get_current_currency();
+              ?>
+              <div class="currency-selector" style="margin-top: 10px;">
+                <select id="currencySelector" class="form-control form-control-sm" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2);">
+                  <?php foreach ($active_currencies as $curr) { ?>
+                    <option value="<?=$curr['code']?>" <?=($curr['code'] === $current_currency['code']) ? 'selected' : ''?>>
+                      <?=$curr['code']?> - <?=$curr['name']?>
+                    </option>
+                  <?php } ?>
+                </select>
+              </div>
+              <?php } ?>
         </div>
       <!--Below SideNavHeader-->
       <div id="main-container">
@@ -331,6 +350,40 @@ if (get_option("enable_news_announcement") == 1) {
   </a>
 <?php }?>
         
+
+<script>
+// Currency selector functionality
+document.addEventListener('DOMContentLoaded', function() {
+  var currencySelector = document.getElementById('currencySelector');
+  
+  if (currencySelector) {
+    currencySelector.addEventListener('change', function() {
+      var selectedCurrency = this.value;
+      
+      // Send AJAX request to set currency
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '<?=cn("currencies/set_currency")?>', true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          // Reload page to apply currency change
+          window.location.reload();
+        }
+      };
+      
+      // Get CSRF token from page (if available)
+      var csrfToken = '';
+      var csrfInput = document.querySelector('input[name="<?=csrf_token()?>"]');
+      if (csrfInput) {
+        csrfToken = '&<?=csrf_token()?>='+encodeURIComponent(csrfInput.value);
+      }
+      
+      xhr.send('currency_code='+encodeURIComponent(selectedCurrency)+csrfToken);
+    });
+  }
+});
+</script>
 
 <?php
 if (get_option("enable_news_announcement") == 1) {
