@@ -850,3 +850,24 @@ $lang["allowed"] = "Allowed";
 $lang["not_allowed"] = "Not Allowed";
 $lang["take_fee_from_user"] = "Take fee from user";
 
+
+
+/*----------  Multi-Currency  ----------*/
+$lang["Multi_Currency_Management"] = "Multi-Currency Management";
+$lang["currency_code"] = "Currency Code";
+$lang["currency_symbol"] = "Currency Symbol";
+$lang["currency_name"] = "Currency Name";
+$lang["exchange_rate"] = "Exchange Rate";
+$lang["default_currency"] = "Default Currency";
+$lang["enabled_currencies"] = "Enabled Currencies";
+$lang["add_currency"] = "Add Currency";
+$lang["edit_currency"] = "Edit Currency";
+$lang["delete_currency"] = "Delete Currency";
+$lang["set_as_default"] = "Set as Default";
+$lang["currency_enabled"] = "Currency Enabled";
+$lang["currency_disabled"] = "Currency Disabled";
+$lang["base_currency"] = "Base Currency";
+$lang["cannot_delete_base_currency"] = "Cannot delete base currency";
+$lang["cannot_disable_base_currency"] = "Cannot disable base currency";
+$lang["currency_rate_info"] = "Enter the exchange rate relative to PKR (base currency)";
+$lang["select_currency"] = "Select Currency";
