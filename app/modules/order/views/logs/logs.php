@@ -112,7 +112,9 @@
               </thead>
               <tbody>
                 <?php
-                $currency_symbol = get_option("currency_symbol","");
+                $current_currency = get_current_currency();
+                $currency_symbol = $current_currency['symbol'];
+                $currency_code = $current_currency['code'];
                 $decimal_places = get_option('currency_decimal', 2);
                 $decimalpoint = get_option('currency_decimal_separator', 'dot') == 'comma' ? ',' : '.';
                 $separator = get_option('currency_thousand_separator', 'space') == 'space' ? ' ' : (get_option('currency_thousand_separator', 'comma') == 'comma' ? ',' : '.');
@@ -138,6 +140,11 @@
                   if (get_role("admin") && !empty($row->created) && substr($row->created,0,10) == $today && is_numeric($row->charge) && is_numeric($row->formal_charge) && $row->charge > 0 && $row->formal_charge > 0) {
                       $profit_today += $profit;
                   }
+                  
+                  // Convert amounts to current currency
+                  $charge_converted = convert_currency($row->charge, 'PKR', $currency_code);
+                  $provider_charge_converted = convert_currency($provider_charge_in_pkr, 'PKR', $currency_code);
+                  $profit_converted = convert_currency($profit, 'PKR', $currency_code);
                 ?>
                 <!-- Table Row -->
                 <tr style="color: #fff;" class="tr_<?=$row->ids?>">
@@ -195,12 +202,12 @@
                             ?>
                           </li> 
                           <li><?=lang("Quantity")?>: <?=$row->quantity?></li>
-                          <li><?=lang("Charge")?>: <?= $currency_symbol . currency_format($row->charge, $decimal_places, $decimalpoint, $separator) ?></li>
+                          <li><?=lang("Charge")?>: <?= $currency_symbol . currency_format($charge_converted, $decimal_places, $decimalpoint, $separator) ?></li>
                           <?php if (get_role("admin")): ?>
                           <li><?=lang("Provider Charge")?>: 
                             <small style="color: #3498db; font-size: 12px;">
                               <?= (isset($provider_charge_in_pkr) && $provider_charge_in_pkr > 0) 
-                                  ? '$' . $row->formal_charge . ' (' . $currency_symbol . currency_format($provider_charge_in_pkr, $decimal_places, $decimalpoint, $separator) . ')' 
+                                  ? '$' . $row->formal_charge . ' (' . $currency_symbol . currency_format($provider_charge_converted, $decimal_places, $decimalpoint, $separator) . ')' 
                                   : lang("No charge available"); ?>
                             </small>
                           </li>
@@ -220,7 +227,7 @@
                     </div>
                   </td>
                   <?php if (get_role("admin")): ?>
-                  <td><?= $currency_symbol . currency_format($profit, $decimal_places, $decimalpoint, $separator); ?></td>
+                  <td><?= $currency_symbol . currency_format($profit_converted, $decimal_places, $decimalpoint, $separator); ?></td>
                   <?php endif; ?>
                   <td style="color: #fff;"><?=convert_timezone($row->created, "user")?></td>
                   <td>
@@ -298,14 +305,16 @@ $(document).ready(function() {
     $('.sidebar').toggleClass('active');
   });
 
-  // Display profit cards
-  let totalProfit = <?=json_encode(round($total_profit, 1))?>;
-  let totalSell = <?=json_encode(round($total_sell, 1))?>;
-  let profitToday = <?=json_encode(round($profit_today, 1))?>;
+  // Convert and display profit cards in current currency
+  let totalProfit = <?=json_encode(round(convert_currency($total_profit, 'PKR', $currency_code), 2))?>;
+  let totalSell = <?=json_encode(round(convert_currency($total_sell, 'PKR', $currency_code), 2))?>;
+  let profitToday = <?=json_encode(round(convert_currency($profit_today, 'PKR', $currency_code), 2))?>;
+  let currencySymbol = <?=json_encode($currency_symbol)?>;
+  let currencyCode = <?=json_encode($currency_code)?>;
 
-  $('#total-profit-value').text(totalProfit + ' PKR');
-  $('#total-sell-value').text(totalSell + ' PKR');
-  $('#profit-today-value').text(profitToday + ' PKR');
+  $('#total-profit-value').text(currencySymbol + totalProfit.toFixed(2) + ' ' + currencyCode);
+  $('#total-sell-value').text(currencySymbol + totalSell.toFixed(2) + ' ' + currencyCode);
+  $('#profit-today-value').text(currencySymbol + profitToday.toFixed(2) + ' ' + currencyCode);
 
   // No JS required for single order resend (uses anchor)
 });

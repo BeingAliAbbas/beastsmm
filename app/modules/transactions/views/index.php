@@ -130,9 +130,13 @@
           <?php
             if (!empty($transactions)) {
               $i = 0;
-              $currency_symbol = get_option("currency_symbol", '$');
+              $current_currency = get_current_currency();
+              $currency_symbol = $current_currency['symbol'];
+              $currency_code = $current_currency['code'];
               foreach ($transactions as $key => $row) {
                 $i++;
+                // Convert amount from PKR to current currency
+                $amount_converted = convert_currency($row->amount, 'PKR', $currency_code);
           ?>
           <tr class="tr_<?=$row->ids?>">
             <td><?=$i?></td>
@@ -167,7 +171,7 @@
                 <img class="payment" src="<?=BASE?>/assets/images/payments/<?=strtolower($row->type); ?>.png" alt="<?=$row->type?> icon">
               <?php } ?>
             </td>
-            <td><?=$currency_symbol.$row->amount?></td>
+            <td><?=$currency_symbol.number_format($amount_converted, 2)?></td>
             <td><?=$row->txn_fee?></td>
             <?php if (get_role("admin")) { ?>
               <td><?=$row->note;?></td>

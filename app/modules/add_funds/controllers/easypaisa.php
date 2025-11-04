@@ -232,10 +232,11 @@ class easypaisa extends MX_Controller {
             $api_key = $config->api_key;
 
             if (empty($api_url) || empty($admin_whatsapp_number) || empty($api_key)) return false;
-
+            
+            // Always show amounts in PKR for admin notifications
             $message = ($type === 'new')
-                ? "*🆕 New Easypaisa Payment Submission!*\n\n💰 *Amount*: PKR {$amount}\n🔢 *Transaction ID*: {$transaction_id}\n📧 *User Email*: {$user_email}\n\n🔍 Awaiting manual verification."
-                : "*✅ Easypaisa Payment Completed!*\n\n💰 *Amount*: PKR {$amount}\n🔢 *Transaction ID*: {$transaction_id}\n📧 *User Email*: {$user_email}\n\n✨ Transaction completed successfully.";
+                ? "*🆕 New Easypaisa Payment Submission!*\n\n💰 *Amount*: Rs {$amount} PKR\n🔢 *Transaction ID*: {$transaction_id}\n📧 *User Email*: {$user_email}\n\n🔍 Awaiting manual verification."
+                : "*✅ Easypaisa Payment Completed!*\n\n💰 *Amount*: Rs {$amount} PKR\n🔢 *Transaction ID*: {$transaction_id}\n📧 *User Email*: {$user_email}\n\n✨ Transaction completed successfully.";
 
             $data = [
                 "apiKey"      => $api_key,

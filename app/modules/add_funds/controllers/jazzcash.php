@@ -234,10 +234,11 @@ class jazzcash extends MX_Controller {
             $admin_whatsapp_number = $config->admin_phone;
             $api_key               = $config->api_key;
             if (!$api_url || !$admin_whatsapp_number || !$api_key) return false;
-
+            
+            // Always show amounts in PKR for admin notifications
             $message = ($type === 'new')
-                ? "*🆕 New JazzCash Payment Submission!*\n\n💰 *Amount*: PKR {$amount}\n🔢 *Transaction ID*: {$transaction_id}\n📧 *User Email*: {$user_email}\n\n🔍 Awaiting verification."
-                : "*✅ JazzCash Payment Completed!*\n\n💰 *Amount*: PKR {$amount}\n🔢 *Transaction ID*: {$transaction_id}\n📧 *User Email*: {$user_email}\n\n✨ Transaction completed successfully!";
+                ? "*🆕 New JazzCash Payment Submission!*\n\n💰 *Amount*: Rs {$amount} PKR\n🔢 *Transaction ID*: {$transaction_id}\n📧 *User Email*: {$user_email}\n\n🔍 Awaiting verification."
+                : "*✅ JazzCash Payment Completed!*\n\n💰 *Amount*: Rs {$amount} PKR\n🔢 *Transaction ID*: {$transaction_id}\n📧 *User Email*: {$user_email}\n\n✨ Transaction completed successfully!";
 
             $payload = json_encode([
                 "apiKey"      => $api_key,
