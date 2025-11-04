@@ -29,10 +29,19 @@ class setting extends MX_Controller {
 
         // Load WhatsApp API settings from whatsapp_config (single-row pattern)
         $whatsapp_api = $this->db->get('whatsapp_config')->row();
+        
+        // Load currencies if on currencies tab
+        $currencies = [];
+        if ($tab === 'currencies') {
+            $this->load->model('currencies/currencies_model', 'currencies_model');
+            $currencies = $this->currencies_model->get_all_currencies();
+        }
+        
         $data = [
             "module"       => get_class($this),
             "tab"          => $tab,
             "whatsapp_api" => $whatsapp_api,  // may be null if not created yet
+            "currencies"   => $currencies,
         ];
 
         $this->template->build('index', $data);
@@ -58,10 +67,19 @@ class setting extends MX_Controller {
 
         // Also supply API settings here if partial loads happen via AJAX tab switching
         $whatsapp_api = $this->db->get('whatsapp_config')->row();
+        
+        // Load currencies if on currencies tab
+        $currencies = [];
+        if ($tab === 'currencies') {
+            $this->load->model('currencies/currencies_model', 'currencies_model');
+            $currencies = $this->currencies_model->get_all_currencies();
+        }
+        
         $data = [
             "module"       => get_class($this),
             "tab"          => $tab,
             "whatsapp_api" => $whatsapp_api,
+            "currencies"   => $currencies,
         ];
         $this->template->build('index', $data);
     }

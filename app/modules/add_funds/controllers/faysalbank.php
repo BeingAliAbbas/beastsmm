@@ -128,7 +128,7 @@ class faysalbank extends MX_Controller
                     <table style='width: 100%; border-collapse: collapse; margin-top: 20px;'>
                         <tr>
                             <td style='padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold; width: 30%;'>Amount:</td>
-                            <td style='padding: 10px; border-bottom: 1px solid #ddd;'>$amount PKR</td>
+                            <td style='padding: 10px; border-bottom: 1px solid #ddd;'>Rs $amount PKR</td>
                         </tr>
                         <tr>
                             <td style='padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;'>Transaction ID:</td>
@@ -171,13 +171,13 @@ class faysalbank extends MX_Controller
 
             if ($type === 'new') {
                 $message = "*🆕 New Faysal Bank Payment Submission!*\n\n"
-                        . "💰 *Amount*: PKR {$amount}\n"
+                        . "💰 *Amount*: Rs {$amount} PKR\n"
                         . "🔢 *Transaction ID*: {$transaction_id}\n"
                         . "📧 *User Email*: {$user_email}\n\n"
                         . "🔍 New payment submission received. Awaiting verification.";
             } else {
                 $message = "*✅ Faysal Bank Payment Completed!*\n\n"
-                        . "💰 *Amount*: PKR {$amount}\n"
+                        . "💰 *Amount*: Rs {$amount} PKR\n"
                         . "🔢 *Transaction ID*: {$transaction_id}\n"
                         . "📧 *User Email*: {$user_email}\n\n"
                         . "✨ Transaction has been completed successfully!";
